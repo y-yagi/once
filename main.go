@@ -35,6 +35,7 @@ func main() {
 	err := runCmd(cmd, args[2:], os.Stdin, os.Stdout, os.Stderr)
 	if err != nil {
 		fmt.Printf("%v\n", err)
+		os.Remove(lockfile)
 		os.Exit(1)
 	}
 }
