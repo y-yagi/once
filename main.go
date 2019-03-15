@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	var forceLock bool
 	args := os.Args
 	if len(args) < 2 {
 		usage()
@@ -17,6 +18,9 @@ func main() {
 	}
 
 	cmd := args[1]
+	if len(args) > 2 && args[2] == "--force-lock" {
+		forceLock = true
+	}
 
 	lockfile := "/tmp/once-" + cmd + ".lock"
 
@@ -25,6 +29,10 @@ func main() {
 	}
 
 	ioutil.WriteFile(lockfile, []byte(""), 0644)
+	if forceLock {
+		os.Exit(1)
+	}
+
 	fd, _ := syscall.Open(lockfile, syscall.O_RDONLY, 0000)
 	defer syscall.Close(fd)
 
